@@ -185,6 +185,8 @@
                                 <input type="range" id="legY" name="" min="0" max="1" step="0.01" value="0.2" style="position: relative; top: 3px;" disabled="true">
                             </div>
                             <hr>
+
+
                             <h4>Architecture:</h4>
                             <div id="architecture">
                                 <p>Width and Height | Depth</p>
@@ -511,20 +513,32 @@
     <script src="UNet.js"></script>
 
     <script type="text/javascript">
+
 unet = UNet();
+
 function restart() {
+
+    // same as python function range(n)
     let range = n => [...Array(n).keys()];
     let rand = (min, max) => Math.random() * (max - min) + min;
+
+    // architecture is an array of dics with w/h and depth for each layer
     architecture = $('#architecture').find('input').map((i,el) => $(el).val()).get().filter(input => $.isNumeric(input)).map(s => parseInt(s));
     architecture = range(architecture.length / 2).map(i => architecture.slice(2*i, 2*i+2)).map((l) => {return {'widthAndHeight':l[0],'depth':l[1]}});
+
+    // add ops to arch
     ops = $('#architecture').find(':selected').map((i,el) => $(el).text());
     for (i =0;i <architecture.length;i++){
         architecture[i]['op'] = ops[i];
     }
+
+    // connections is an array of dics with from and to for each connection
     connections = $('#connections').find(':selected').map((i,el) => $(el).val()).get().filter(input => $.isNumeric(input)).map(s => parseInt(s));
     connections = range(connections.length / 2).map(i => connections.slice(2*i, 2*i+2)).map((l) => {return {'from':l[0],'to':l[1]}});
+
     unet.redraw({'architecture_':architecture, 'connections_':connections});
 }
+
 updateLayersNumber();
 //
 var initial = ['2','13','4','11','6','9']
