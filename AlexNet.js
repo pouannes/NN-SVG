@@ -4,19 +4,23 @@ function AlexNet() {
     // /////////////////////////////////////////////////////////////////////////////
     //                     ///////    Helper Functions    ///////
     // /////////////////////////////////////////////////////////////////////////////
-
+    
+    // return an array of n-tuples of the form [[array[0], ..., [array[n-1]], [array[1], ..., [array[n]], [array[2], ..., array[n+1]], ...]
     let nWise = (n, array) => {
       iterators = Array(n).fill().map(() => array[Symbol.iterator]());
       iterators.forEach((it, index) => Array(index).fill().forEach(() => it.next()));
       return Array(array.length - n + 1).fill().map(() => (iterators.map(it => it.next().value)));
     };
 
+    // same as above but n = 2 : so doubles
     let pairWise = (array) => nWise(2, array);
 
     let sum = (arr) => arr.reduce((a,b)=>a+b);
 
+    // random number between min and max
     let rand = (min, max) => Math.random() * (max - min) + min;
 
+    // add method to array 
     Array.prototype.last = function() { return this[this.length - 1]; };
 
 
@@ -39,6 +43,7 @@ function AlexNet() {
     var conv_material = new THREE.MeshBasicMaterial( {'color':color2, 'side':THREE.DoubleSide, 'transparent':true, 'opacity':strideOpacity, 'depthWrite':false, 'needsUpdate':true} );
     var pyra_material = new THREE.MeshBasicMaterial( {'color':color3, 'side':THREE.DoubleSide, 'transparent':true, 'opacity':strideOpacity, 'depthWrite':false, 'needsUpdate':true} );
 
+    var architecture0 = []; // this is for FPN
     var architecture = [];
     var architecture2 = [];
     var betweenLayers = 20;
@@ -52,6 +57,7 @@ function AlexNet() {
 
     var showDims = false;
 
+    // return length value with log or not
     let depthFn = (depth) => logDepth ? (Math.log(depth) * depthScale) : (depth * depthScale);
     let widthFn = (width) => logWidth ? (Math.log(width) * widthScale) : (width * widthScale);
     let convFn = (conv) => logConvSize ? (Math.log(conv) * convScale) : (conv * convScale);
